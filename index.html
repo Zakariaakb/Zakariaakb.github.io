@@ -3,59 +3,406 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zakaria - Métré & Freelance</title>
+    <title>Zakaria - خدمات Métré & Freelance الهندسية</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --primary: #2c3e50; --accent: #e67e22; --light: #ecf0f1; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background: var(--light); color: var(--primary); }
-        header { background: var(--primary); color: white; padding: 3rem 1rem; text-align: center; }
-        .container { max-width: 1000px; margin: auto; padding: 2rem; }
-        .services { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
-        .card { background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; transition: 0.3s; }
-        .card:hover { transform: translateY(-5px); }
-        .card i { font-size: 2.5rem; color: var(--accent); margin-bottom: 1rem; }
-        .btn-whatsapp { display: inline-block; background: #25d366; color: white; padding: 1rem 2rem; border-radius: 50px; text-decoration: none; font-weight: bold; margin-top: 2rem; font-size: 1.2rem; }
-        footer { text-align: center; padding: 2rem; background: #ddd; margin-top: 3rem; }
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e67e22;
+            --light: #f9f9f9;
+            --dark: #1a2530;
+            --shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'Tahoma', Geneva, Verdana, sans-serif;
+            margin: 0;
+            background: var(--light);
+            color: var(--primary);
+            line-height: 1.6;
+        }
+        
+        /* تحسينات للعناوين */
+        h1, h2, h3, h4 {
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            line-height: 1.2;
+        }
+        
+        h2 {
+            font-size: 2rem;
+            color: var(--primary);
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        
+        h2:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 80px;
+            height: 3px;
+            background: var(--accent);
+        }
+        
+        p {
+            margin-bottom: 1rem;
+        }
+        
+        /* الهيدر */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--dark));
+            color: white;
+            padding: 3rem 1rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.05)"/></svg>');
+            background-size: cover;
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+            margin-top: 1rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin-right: auto;
+            margin-left: auto;
+        }
+        
+        /* المحتوى الرئيسي */
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 2rem;
+        }
+        
+        /* تحسينات للبطاقات */
+        .services {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: all 0.3s ease;
+            border-top: 4px solid transparent;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card:nth-child(1) {
+            border-top-color: #3498db;
+        }
+        
+        .card:nth-child(2) {
+            border-top-color: #e74c3c;
+        }
+        
+        .card:nth-child(3) {
+            border-top-color: #2ecc71;
+        }
+        
+        .card i {
+            font-size: 3rem;
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+        }
+        
+        .card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        
+        .card p {
+            color: #555;
+            flex-grow: 1;
+        }
+        
+        /* قسم الواتساب */
+        .whatsapp-section {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 3rem 2rem;
+            border-radius: 12px;
+            margin-top: 4rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+        
+        .whatsapp-section h2 {
+            text-align: center;
+        }
+        
+        .whatsapp-section h2:after {
+            right: 50%;
+            transform: translateX(50%);
+        }
+        
+        .whatsapp-section p {
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            color: #555;
+        }
+        
+        .btn-whatsapp {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #25d366;
+            color: white;
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+            gap: 10px;
+        }
+        
+        .btn-whatsapp:hover {
+            background: #1da851;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+        }
+        
+        .btn-whatsapp i {
+            font-size: 1.5rem;
+        }
+        
+        /* قسم المهارات */
+        .skills {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+        
+        .skill-category {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+        
+        .skill-category h3 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--light);
+        }
+        
+        .skill-list {
+            list-style: none;
+        }
+        
+        .skill-list li {
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+        }
+        
+        .skill-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .skill-list i {
+            color: var(--accent);
+            margin-left: 10px;
+        }
+        
+        /* الفوتر */
+        footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: var(--dark);
+            color: white;
+            margin-top: 4rem;
+        }
+        
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .copyright {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        /* تحسينات للجوال */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            h2 {
+                font-size: 1.7rem;
+            }
+            
+            .container {
+                padding: 1.5rem;
+            }
+            
+            .services {
+                grid-template-columns: 1fr;
+            }
+            
+            .skills {
+                grid-template-columns: 1fr;
+            }
+            
+            .whatsapp-section {
+                padding: 2rem 1.5rem;
+            }
+        }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>زكريا - متخصص في Métré و Les-P</h1>
-    <p>خدمات احترافية في حساب الكميات، إعداد المخططات، ودراسات المشاريع</p>
+    <div class="header-content">
+        <h1>زكريا - خدمات المقاييس الهندسية والعمل الحر</h1>
+        <p class="tagline">متخصص في Métré و Les-P، أقدم خدمات احترافية في حساب الكميات، إعداد المخططات الهندسية، ودراسات الجدوى للمشاريع بمختلف أحجامها.</p>
+    </div>
 </header>
 
 <div class="container">
-    <h2 style="text-align: center;">خدماتي الاحترافية</h2>
+    <h2>خدماتي الاحترافية</h2>
     <div class="services">
         <div class="card">
             <i class="fas fa-calculator"></i>
             <h3>Métré & Devis</h3>
-            <p>حساب دقيق للكميات وإعداد كشوفات الحساب (Avant-métré / Attachements)</p>
+            <p>حساب دقيق للكميات وإعداد كشوفات الحساب (Avant-métré / Attachements) مع إعداد التقديرات المالية للمشاريع الإنشائية والمعمارية بدقة عالية.</p>
         </div>
         <div class="card">
             <i class="fas fa-drafting-compass"></i>
             <h3>Les-P & Dessin</h3>
-            <p>إعداد المخططات الهندسية بدقة عالية باستعمال برامج التصميم</p>
+            <p>إعداد المخططات الهندسية بدقة عالية باستخدام أحدث برامج التصميم (AutoCAD, Revit) وتقديم حلول تصميمية مبتكرة تلبي متطلبات المشروع.</p>
         </div>
         <div class="card">
             <i class="fas fa-file-invoice-dollar"></i>
             <h3>Études de Prix</h3>
-            <p>تحليل الأسعار ودراسة الجدوى للمشاريع الصغرى والكبرى</p>
+            <p>تحليل الأسعار ودراسة الجدوى الاقتصادية للمشاريع الإنشائية بكافة أحجامها، مع تقديم تقارير مفصلة تساعد في اتخاذ القرارات الاستثمارية.</p>
         </div>
     </div>
 
-    <div style="text-align: center; margin-top: 4rem;">
-        <h2>محتاج خدمة سريعة واحترافية؟</h2>
-        <p>تواصل معي مباشرة عبر الواتساب للمناقشة</p>
-        <a href="https://wa.me/212600000000" class="btn-whatsapp">
-            <i class="fab fa-whatsapp"></i> تواصل معي الآن
+    <div class="skills">
+        <div class="skill-category">
+            <h3>المهارات التقنية</h3>
+            <ul class="skill-list">
+                <li><i class="fas fa-check-circle"></i> إعداد وتنظيم المقاييس الكمية</li>
+                <li><i class="fas fa-check-circle"></i> تحليل الأسعار والتكاليف</li>
+                <li><i class="fas fa-check-circle"></i> إعداد المخططات التنفيذية</li>
+                <li><i class="fas fa-check-circle"></i> إعداد دراسات الجدوى الاقتصادية</li>
+                <li><i class="fas fa-check-circle"></i> استخدام برامج التصميم الهندسي</li>
+            </ul>
+        </div>
+        
+        <div class="skill-category">
+            <h3>مجالات التخصص</h3>
+            <ul class="skill-list">
+                <li><i class="fas fa-building"></i> المشاريع السكنية والتجارية</li>
+                <li><i class="fas fa-road"></i> المشاريع البنية التحتية</li>
+                <li><i class="fas fa-industry"></i> المشاريع الصناعية</li>
+                <li><i class="fas fa-hard-hat"></i> مشاريع الترميم والتجديد</li>
+                <li><i class="fas fa-home"></i> المشاريع الصغرى والمتوسطة</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="whatsapp-section">
+        <h2>هل تحتاج إلى خدمة سريعة ودقيقة؟</h2>
+        <p>أنا هنا لمساعدتك في تقديم حلول هندسية احترافية تناسب مشروعك وميزانيتك. تواصل معي مباشرة عبر الواتساب لمناقشة تفاصيل مشروعك والحصول على عرض سعر مجاني.</p>
+        <a href="https://wa.me/212684726647" class="btn-whatsapp">
+            <i class="fab fa-whatsapp"></i> تواصل معي عبر الواتساب
         </a>
+        <p style="margin-top: 1rem; font-size: 0.9rem;">الرقم: +212 684-726647</p>
     </div>
 </div>
 
 <footer>
-    <p>جميع الحقوق محفوظة &copy; 2024 - زكريا</p>
+    <div class="footer-content">
+        <h3>زكريا - خدمات هندسية احترافية</h3>
+        <p>متخصص في Métré و Les-P ودراسات الأسعار للمشاريع الإنشائية</p>
+        
+        <div class="contact-info">
+            <div class="contact-item">
+                <i class="fas fa-phone"></i>
+                <span>+212 684-726647</span>
+            </div>
+            <div class="contact-item">
+                <i class="fas fa-envelope"></i>
+                <span>zakaria.metre@example.com</span>
+            </div>
+            <div class="contact-item">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>المغرب</span>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            <p>جميع الحقوق محفوظة &copy; 2024 - زكريا | خدمات المقاييس الهندسية والعمل الحر</p>
+        </div>
+    </div>
 </footer>
 
 </body>
