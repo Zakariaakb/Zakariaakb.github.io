@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zakaria - خدمات Métré & Freelance الهندسية</title>
+    <title>Zakaria - خدمات Métré & Freelance | خدمات المقاييس الهندسية</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
@@ -27,6 +27,43 @@
             background: var(--light);
             color: var(--primary);
             line-height: 1.6;
+        }
+        
+        /* لغة التبديل */
+        .lang-switcher {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+        }
+        
+        .lang-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+        
+        .lang-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        /* إخفاء النصوص غير النشطة */
+        .lang-ar {
+            display: block;
+        }
+        
+        .lang-fr {
+            display: none;
+        }
+        
+        .lang-fr.active, .lang-ar.active {
+            display: block;
         }
         
         /* تحسينات للعناوين */
@@ -57,6 +94,11 @@
             background: var(--accent);
         }
         
+        .text-center h2:after {
+            right: 50%;
+            transform: translateX(50%);
+        }
+        
         p {
             margin-bottom: 1rem;
         }
@@ -69,6 +111,10 @@
             text-align: center;
             position: relative;
             overflow: hidden;
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         header:before {
@@ -168,15 +214,6 @@
             margin-top: 4rem;
             text-align: center;
             box-shadow: var(--shadow);
-        }
-        
-        .whatsapp-section h2 {
-            text-align: center;
-        }
-        
-        .whatsapp-section h2:after {
-            right: 50%;
-            transform: translateX(50%);
         }
         
         .whatsapp-section p {
@@ -313,76 +350,159 @@
             .whatsapp-section {
                 padding: 2rem 1.5rem;
             }
+            
+            .lang-switcher {
+                top: 10px;
+                left: 10px;
+            }
+            
+            .lang-btn {
+                padding: 6px 12px;
+                font-size: 0.9rem;
+            }
         }
     </style>
 </head>
 <body>
 
 <header>
+    <div class="lang-switcher">
+        <button class="lang-btn" id="switchLang">FR</button>
+    </div>
+    
     <div class="header-content">
-        <h1>زكريا - خدمات المقاييس الهندسية والعمل الحر</h1>
-        <p class="tagline">متخصص في Métré و Les-P، أقدم خدمات احترافية في حساب الكميات، إعداد المخططات الهندسية، ودراسات الجدوى للمشاريع بمختلف أحجامها.</p>
+        <div class="lang-ar active">
+            <h1>زكريا - خدمات المقاييس الهندسية والعمل الحر</h1>
+            <p class="tagline">متخصص في Métré و Les-P، أقدم خدمات احترافية في حساب الكميات، إعداد المخططات الهندسية، ودراسات الجدوى للمشاريع بمختلف أحجامها.</p>
+        </div>
+        <div class="lang-fr">
+            <h1>Zakaria - Services de Métré & Freelance</h1>
+            <p class="tagline">Spécialisé en Métré et Les-P, je propose des services professionnels en calcul des quantités, préparation des plans techniques et études de faisabilité pour projets de toutes tailles.</p>
+        </div>
     </div>
 </header>
 
 <div class="container">
-    <h2>خدماتي الاحترافية</h2>
+    <div class="lang-ar active text-center">
+        <h2>خدماتي الاحترافية</h2>
+    </div>
+    <div class="lang-fr text-center">
+        <h2>Mes Services Professionnels</h2>
+    </div>
+    
     <div class="services">
         <div class="card">
             <i class="fas fa-calculator"></i>
-            <h3>Métré & Devis</h3>
-            <p>حساب دقيق للكميات وإعداد كشوفات الحساب (Avant-métré / Attachements) مع إعداد التقديرات المالية للمشاريع الإنشائية والمعمارية بدقة عالية.</p>
+            <div class="lang-ar active">
+                <h3>Métré & Devis</h3>
+                <p>حساب دقيق للكميات وإعداد كشوفات الحساب (Avant-métré / Attachements) مع إعداد التقديرات المالية للمشاريع الإنشائية والمعمارية بدقة عالية.</p>
+            </div>
+            <div class="lang-fr">
+                <h3>Métré & Devis</h3>
+                <p>Calcul précis des quantités et préparation des métrés (Avant-métré / Attachements) avec établissement des devis financiers pour projets de construction et d'architecture avec haute précision.</p>
+            </div>
         </div>
         <div class="card">
             <i class="fas fa-drafting-compass"></i>
-            <h3>Les-P & Dessin</h3>
-            <p>إعداد المخططات الهندسية بدقة عالية باستخدام أحدث برامج التصميم (AutoCAD, Revit) وتقديم حلول تصميمية مبتكرة تلبي متطلبات المشروع.</p>
+            <div class="lang-ar active">
+                <h3>Les-P & Dessin</h3>
+                <p>إعداد المخططات الهندسية بدقة عالية باستخدام أحدث برامج التصميم (AutoCAD, Revit) وتقديم حلول تصميمية مبتكرة تلبي متطلبات المشروع.</p>
+            </div>
+            <div class="lang-fr">
+                <h3>Les-P & Dessin</h3>
+                <p>Préparation des plans techniques avec haute précision en utilisant les derniers logiciels de conception (AutoCAD, Revit) et fourniture de solutions de conception innovantes répondant aux exigences du projet.</p>
+            </div>
         </div>
         <div class="card">
             <i class="fas fa-file-invoice-dollar"></i>
-            <h3>Études de Prix</h3>
-            <p>تحليل الأسعار ودراسة الجدوى الاقتصادية للمشاريع الإنشائية بكافة أحجامها، مع تقديم تقارير مفصلة تساعد في اتخاذ القرارات الاستثمارية.</p>
+            <div class="lang-ar active">
+                <h3>Études de Prix</h3>
+                <p>تحليل الأسعار ودراسة الجدوى الاقتصادية للمشاريع الإنشائية بكافة أحجامها، مع تقديم تقارير مفصلة تساعد في اتخاذ القرارات الاستثمارية.</p>
+            </div>
+            <div class="lang-fr">
+                <h3>Études de Prix</h3>
+                <p>Analyse des prix et étude de faisabilité économique pour projets de construction de toutes tailles, avec des rapports détaillés aidant à la prise de décisions d'investissement.</p>
+            </div>
         </div>
     </div>
 
     <div class="skills">
         <div class="skill-category">
-            <h3>المهارات التقنية</h3>
-            <ul class="skill-list">
-                <li><i class="fas fa-check-circle"></i> إعداد وتنظيم المقاييس الكمية</li>
-                <li><i class="fas fa-check-circle"></i> تحليل الأسعار والتكاليف</li>
-                <li><i class="fas fa-check-circle"></i> إعداد المخططات التنفيذية</li>
-                <li><i class="fas fa-check-circle"></i> إعداد دراسات الجدوى الاقتصادية</li>
-                <li><i class="fas fa-check-circle"></i> استخدام برامج التصميم الهندسي</li>
-            </ul>
+            <div class="lang-ar active">
+                <h3>المهارات التقنية</h3>
+                <ul class="skill-list">
+                    <li><i class="fas fa-check-circle"></i> إعداد وتنظيم المقاييس الكمية</li>
+                    <li><i class="fas fa-check-circle"></i> تحليل الأسعار والتكاليف</li>
+                    <li><i class="fas fa-check-circle"></i> إعداد المخططات التنفيذية</li>
+                    <li><i class="fas fa-check-circle"></i> إعداد دراسات الجدوى الاقتصادية</li>
+                    <li><i class="fas fa-check-circle"></i> استخدام برامج التصميم الهندسي</li>
+                </ul>
+            </div>
+            <div class="lang-fr">
+                <h3>Compétences Techniques</h3>
+                <ul class="skill-list">
+                    <li><i class="fas fa-check-circle"></i> Préparation et organisation des métrés quantitatifs</li>
+                    <li><i class="fas fa-check-circle"></i> Analyse des prix et des coûts</li>
+                    <li><i class="fas fa-check-circle"></i> Préparation des plans d'exécution</li>
+                    <li><i class="fas fa-check-circle"></i> Élaboration d'études de faisabilité économique</li>
+                    <li><i class="fas fa-check-circle"></i> Maîtrise des logiciels de conception technique</li>
+                </ul>
+            </div>
         </div>
         
         <div class="skill-category">
-            <h3>مجالات التخصص</h3>
-            <ul class="skill-list">
-                <li><i class="fas fa-building"></i> المشاريع السكنية والتجارية</li>
-                <li><i class="fas fa-road"></i> المشاريع البنية التحتية</li>
-                <li><i class="fas fa-industry"></i> المشاريع الصناعية</li>
-                <li><i class="fas fa-hard-hat"></i> مشاريع الترميم والتجديد</li>
-                <li><i class="fas fa-home"></i> المشاريع الصغرى والمتوسطة</li>
-            </ul>
+            <div class="lang-ar active">
+                <h3>مجالات التخصص</h3>
+                <ul class="skill-list">
+                    <li><i class="fas fa-building"></i> المشاريع السكنية والتجارية</li>
+                    <li><i class="fas fa-road"></i> المشاريع البنية التحتية</li>
+                    <li><i class="fas fa-industry"></i> المشاريع الصناعية</li>
+                    <li><i class="fas fa-hard-hat"></i> مشاريع الترميم والتجديد</li>
+                    <li><i class="fas fa-home"></i> المشاريع الصغرى والمتوسطة</li>
+                </ul>
+            </div>
+            <div class="lang-fr">
+                <h3>Domaines de Spécialisation</h3>
+                <ul class="skill-list">
+                    <li><i class="fas fa-building"></i> Projets résidentiels et commerciaux</li>
+                    <li><i class="fas fa-road"></i> Projets d'infrastructure</li>
+                    <li><i class="fas fa-industry"></i> Projets industriels</li>
+                    <li><i class="fas fa-hard-hat"></i> Projets de rénovation et réhabilitation</li>
+                    <li><i class="fas fa-home"></i> Petits et moyens projets</li>
+                </ul>
+            </div>
         </div>
     </div>
 
     <div class="whatsapp-section">
-        <h2>هل تحتاج إلى خدمة سريعة ودقيقة؟</h2>
-        <p>أنا هنا لمساعدتك في تقديم حلول هندسية احترافية تناسب مشروعك وميزانيتك. تواصل معي مباشرة عبر الواتساب لمناقشة تفاصيل مشروعك والحصول على عرض سعر مجاني.</p>
-        <a href="https://wa.me/212684726647" class="btn-whatsapp">
-            <i class="fab fa-whatsapp"></i> تواصل معي عبر الواتساب
-        </a>
-        <p style="margin-top: 1rem; font-size: 0.9rem;">الرقم: +212 684-726647</p>
+        <div class="lang-ar active">
+            <h2>هل تحتاج إلى خدمة سريعة ودقيقة؟</h2>
+            <p>أنا هنا لمساعدتك في تقديم حلول هندسية احترافية تناسب مشروعك وميزانيتك. تواصل معي مباشرة عبر الواتساب لمناقشة تفاصيل مشروعك والحصول على عرض سعر مجاني.</p>
+            <a href="https://wa.me/212684726647" class="btn-whatsapp">
+                <i class="fab fa-whatsapp"></i> تواصل معي عبر الواتساب
+            </a>
+        </div>
+        <div class="lang-fr">
+            <h2>Besoin d'un service rapide et précis ?</h2>
+            <p>Je suis là pour vous aider à fournir des solutions techniques professionnelles adaptées à votre projet et budget. Contactez-moi directement via WhatsApp pour discuter des détails de votre projet et obtenir un devis gratuit.</p>
+            <a href="https://wa.me/212684726647" class="btn-whatsapp">
+                <i class="fab fa-whatsapp"></i> Contactez-moi sur WhatsApp
+            </a>
+        </div>
+        <p style="margin-top: 1rem; font-size: 0.9rem;">+212 684-726647</p>
     </div>
 </div>
 
 <footer>
     <div class="footer-content">
-        <h3>زكريا - خدمات هندسية احترافية</h3>
-        <p>متخصص في Métré و Les-P ودراسات الأسعار للمشاريع الإنشائية</p>
+        <div class="lang-ar active">
+            <h3>زكريا - خدمات هندسية احترافية</h3>
+            <p>متخصص في Métré و Les-P ودراسات الأسعار للمشاريع الإنشائية</p>
+        </div>
+        <div class="lang-fr">
+            <h3>Zakaria - Services Techniques Professionnels</h3>
+            <p>Spécialisé en Métré, Les-P et études de prix pour projets de construction</p>
+        </div>
         
         <div class="contact-info">
             <div class="contact-item">
@@ -391,19 +511,52 @@
             </div>
             <div class="contact-item">
                 <i class="fas fa-envelope"></i>
-                <span>Z-cad@gmail.com</span>
+                <span>zakaria.metre@example.com</span>
             </div>
             <div class="contact-item">
                 <i class="fas fa-map-marker-alt"></i>
-                <span>المغرب</span>
+                <div class="lang-ar active">المغرب</div>
+                <div class="lang-fr">Maroc</div>
             </div>
         </div>
         
         <div class="copyright">
-            <p>جميع الحقوق محفوظة &copy; 2024 - زكريا | خدمات المقاييس الهندسية والعمل الحر</p>
+            <div class="lang-ar active">
+                <p>جميع الحقوق محفوظة &copy; 2024 - زكريا | خدمات المقاييس الهندسية والعمل الحر</p>
+            </div>
+            <div class="lang-fr">
+                <p>Tous droits réservés &copy; 2024 - Zakaria | Services de Métré & Freelance</p>
+            </div>
         </div>
     </div>
 </footer>
+
+<script>
+    // تبديل اللغة
+    const switchBtn = document.getElementById('switchLang');
+    const arabicElements = document.querySelectorAll('.lang-ar');
+    const frenchElements = document.querySelectorAll('.lang-fr');
+    
+    let isFrench = false;
+    
+    switchBtn.addEventListener('click', function() {
+        if (isFrench) {
+            // التبديل إلى العربية
+            arabicElements.forEach(el => el.classList.add('active'));
+            frenchElements.forEach(el => el.classList.remove('active'));
+            switchBtn.textContent = 'FR';
+            document.documentElement.dir = 'rtl';
+            isFrench = false;
+        } else {
+            // التبديل إلى الفرنسية
+            arabicElements.forEach(el => el.classList.remove('active'));
+            frenchElements.forEach(el => el.classList.add('active'));
+            switchBtn.textContent = 'AR';
+            document.documentElement.dir = 'ltr';
+            isFrench = true;
+        }
+    });
+</script>
 
 </body>
 </html>
