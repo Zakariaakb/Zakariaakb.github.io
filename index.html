@@ -3,678 +3,517 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Z-cad - خدمات Métré & Freelance</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Z-Lisps Pro | أدوات AutoCAD الاحترافية</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <style>
+        /* المتغيرات الأساسية */
         :root {
-            --primary: #2c3e50;
-            --secondary: #3498db;
-            --accent: #e67e22;
-            --light: #f9f9f9;
-            --dark: #1a2530;
-            --shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            --primary: #1a365d;
+            --secondary: #2d6bc4;
+            --accent: #f59e0b;
+            --accent-dark: #d97706;
+            --success: #10b981;
+            --light: #f8fafc;
+            --dark: #0f172a;
+            --gray: #64748b;
+            --shadow: 0 10px 25px rgba(0,0,0,0.08);
+            --shadow-lg: 0 20px 40px rgba(0,0,0,0.12);
+            --radius: 12px;
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
-        
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        
-        body {
-            font-family: 'Segoe UI', 'Tahoma', Geneva, Verdana, sans-serif;
-            margin: 0;
-            background: var(--light);
-            color: var(--primary);
-            line-height: 1.6;
-            transition: all 0.3s ease;
-        }
-        
-        /* لغة التبديل - منفصلة على اليمين */
-        .lang-switcher {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            z-index: 100;
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Cairo', sans-serif; background: #f5f7fa; color: var(--dark); line-height: 1.7; }
+
+        /* شريط التنقل */
+        .navbar {
+            background: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            position: fixed;
+            top: 0; right: 0; left: 0;
+            z-index: 1000;
+            padding: 1rem 2rem;
             display: flex;
-            gap: 10px;
+            justify-content: space-between;
+            align-items: center;
         }
-        
-        .lang-btn {
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+        .logo { display: flex; align-items: center; gap: 12px; font-size: 1.5rem; font-weight: 800; color: var(--primary); text-decoration: none; }
+        .logo i { color: var(--accent); font-size: 1.8rem; }
+        .nav-links { display: flex; gap: 2rem; align-items: center; }
+        .nav-links a { text-decoration: none; color: var(--dark); font-weight: 600; font-size: 1.05rem; position: relative; padding: 0.5rem 0; transition: var(--transition); }
+        .nav-links a:hover { color: var(--accent); }
+        .nav-links a::after { content: ''; position: absolute; bottom: 0; right: 0; width: 0; height: 3px; background: var(--accent); transition: var(--transition); }
+        .nav-links a:hover::after { width: 100%; left: 0; }
+        .whatsapp-btn { background: linear-gradient(135deg, #25D366, #128C7E); color: white; padding: 0.8rem 1.8rem; border-radius: 50px; text-decoration: none; font-weight: 700; display: flex; align-items: center; gap: 10px; box-shadow: 0 6px 15px rgba(37,211,102,0.3); transition: var(--transition); }
+        .whatsapp-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(37,211,102,0.4); }
+
+        /* تغيير اللغة */
+        .language-switcher { display: flex; background: #f1f5f9; border-radius: 50px; padding: 4px; margin: 0 15px; }
+        .lang-btn { background: transparent; border: none; padding: 8px 20px; border-radius: 50px; font-weight: 700; font-size: 0.9rem; cursor: pointer; transition: var(--transition); color: var(--gray); }
+        .lang-btn.active { background: white; color: var(--primary); box-shadow: 0 3px 10px rgba(0,0,0,0.1); }
+
+        /* الهيدر الرئيسي */
+        .hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--dark) 100%);
             color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: bold;
-            backdrop-filter: blur(5px);
-            transition: all 0.3s ease;
-            font-size: 0.9rem;
-            min-width: 45px;
+            padding: 8rem 2rem 6rem;
             text-align: center;
-        }
-        
-        .lang-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
-        }
-        
-        .lang-btn.active {
-            background: var(--accent);
-            border-color: var(--accent);
-        }
-        
-        /* إخفاء النصوص غير النشطة */
-        .lang-ar, .lang-fr, .lang-en {
-            display: none;
-        }
-        
-        .lang-ar.active, .lang-fr.active, .lang-en.active {
-            display: block;
-        }
-        
-        /* إتجاهات النص */
-        [dir="rtl"] {
-            text-align: right;
-        }
-        
-        [dir="ltr"] {
-            text-align: left;
-        }
-        
-        /* تحسينات للعناوين */
-        h1, h2, h3, h4 {
-            font-weight: 700;
-            margin-bottom: 1rem;
-        }
-        
-        h1 {
-            font-size: 2.5rem;
-            line-height: 1.2;
-        }
-        
-        h2 {
-            font-size: 2rem;
-            color: var(--primary);
-            position: relative;
-            padding-bottom: 0.5rem;
-        }
-        
-        h2:after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            width: 80px;
-            height: 3px;
-            background: var(--accent);
-        }
-        
-        [dir="rtl"] h2:after {
-            right: 0;
-        }
-        
-        [dir="ltr"] h2:after {
-            left: 0;
-        }
-        
-        .text-center h2:after {
-            right: 50%;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-        
-        p {
-            margin-bottom: 1rem;
-        }
-        
-        /* الهيدر */
-        header {
-            background: linear-gradient(135deg, var(--primary), var(--dark));
-            color: white;
-            padding: 3rem 1rem;
-            text-align: center;
+            margin-top: 70px;
             position: relative;
             overflow: hidden;
-            min-height: 300px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
-        
-        header:before {
+        .hero::before {
             content: '';
             position: absolute;
-            top: 0;
-            right: 0;
-            width: 100%;
-            height: 100%;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.05)"/></svg>');
-            background-size: cover;
+            top: 0; right: 0; bottom: 0; left: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
         }
-        
-        .header-content {
-            position: relative;
-            z-index: 1;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        
-        .tagline {
-            font-size: 1.2rem;
-            margin-top: 1rem;
-            opacity: 0.9;
-            max-width: 700px;
-            margin-right: auto;
-            margin-left: auto;
-        }
-        
-        /* المحتوى الرئيسي */
-        .container {
-            max-width: 1200px;
-            margin: auto;
-            padding: 2rem;
-        }
-        
-        /* تحسينات للبطاقات */
-        .services {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-        
-        .card {
-            background: white;
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: var(--shadow);
-            text-align: center;
-            transition: all 0.3s ease;
-            border-top: 4px solid transparent;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
-        }
-        
-        .card:nth-child(1) {
-            border-top-color: #3498db;
-        }
-        
-        .card:nth-child(2) {
-            border-top-color: #e74c3c;
-        }
-        
-        .card:nth-child(3) {
-            border-top-color: #2ecc71;
-        }
-        
-        .card i {
-            font-size: 3rem;
-            color: var(--accent);
-            margin-bottom: 1.5rem;
-        }
-        
-        .card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: var(--primary);
-        }
-        
-        .card p {
-            color: #555;
-            flex-grow: 1;
-        }
-        
-        /* قسم الواتساب */
-        .whatsapp-section {
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-            padding: 3rem 2rem;
-            border-radius: 12px;
-            margin-top: 4rem;
-            text-align: center;
-            box-shadow: var(--shadow);
-        }
-        
-        .whatsapp-section p {
-            max-width: 700px;
-            margin: 0 auto 2rem;
-            color: #555;
-        }
-        
-        .btn-whatsapp {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background: #25d366;
-            color: white;
-            padding: 1rem 2.5rem;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 1.2rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
-            gap: 10px;
-        }
-        
-        .btn-whatsapp:hover {
-            background: #1da851;
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
-        }
-        
-        .btn-whatsapp i {
-            font-size: 1.5rem;
-        }
-        
-        /* قسم المهارات */
-        .skills {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 4rem;
-        }
-        
-        .skill-category {
-            background: white;
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: var(--shadow);
-        }
-        
-        .skill-category h3 {
-            color: var(--primary);
-            margin-bottom: 1.5rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid var(--light);
-        }
-        
-        .skill-list {
-            list-style: none;
-        }
-        
-        .skill-list li {
-            padding: 0.8rem 0;
-            border-bottom: 1px solid #eee;
-            display: flex;
-            align-items: center;
-        }
-        
-        .skill-list li:last-child {
-            border-bottom: none;
-        }
-        
-        .skill-list i {
-            color: var(--accent);
-        }
-        
-        [dir="rtl"] .skill-list i {
-            margin-left: 10px;
-        }
-        
-        [dir="ltr"] .skill-list i {
-            margin-right: 10px;
-        }
-        
+        .hero-content { max-width: 800px; margin: 0 auto; position: relative; z-index: 1; }
+        .hero h1 { font-size: 3.2rem; margin-bottom: 1.5rem; font-weight: 800; line-height: 1.2; }
+        .hero p { font-size: 1.3rem; opacity: 0.9; margin-bottom: 2.5rem; max-width: 700px; margin: 0 auto 2.5rem; }
+        .stats { display: flex; justify-content: center; gap: 3rem; margin-top: 3rem; flex-wrap: wrap; }
+        .stat-item { text-align: center; }
+        .stat-number { font-size: 2.5rem; font-weight: 800; color: var(--accent); display: block; }
+        .stat-label { font-size: 1rem; opacity: 0.8; }
+
+        /* الفلاتر */
+        .filter-section { padding: 3rem 2rem; text-align: center; max-width: 1200px; margin: 0 auto; }
+        .section-title { font-size: 2.2rem; color: var(--primary); margin-bottom: 1rem; font-weight: 800; position: relative; display: inline-block; }
+        .section-title::after { content: ''; position: absolute; bottom: -10px; right: 0; width: 70px; height: 4px; background: var(--accent); border-radius: 2px; }
+        .section-subtitle { color: var(--gray); font-size: 1.1rem; margin-bottom: 2.5rem; max-width: 600px; margin: 0 auto 2.5rem; }
+        .filter-btns { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-top: 2rem; }
+        .filter-btn { background: white; border: 2px solid #e2e8f0; color: var(--dark); padding: 0.8rem 1.8rem; border-radius: 50px; cursor: pointer; font-weight: 700; font-size: 1rem; transition: var(--transition); display: flex; align-items: center; gap: 8px; }
+        .filter-btn:hover { border-color: var(--accent); color: var(--accent); }
+        .filter-btn.active { background: var(--accent); border-color: var(--accent); color: white; box-shadow: 0 6px 15px rgba(245,158,11,0.3); }
+
+        /* المنتجات */
+        .products-section { padding: 0 2rem 5rem; max-width: 1300px; margin: 0 auto; }
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 30px; margin-top: 2rem; }
+        .product-card { background: white; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); transition: var(--transition); position: relative; border: 1px solid #e2e8f0; }
+        .product-card:hover { transform: translateY(-15px); box-shadow: var(--shadow-lg); }
+        .product-badge { position: absolute; top: 20px; right: 20px; background: var(--accent); color: white; padding: 0.4rem 1rem; border-radius: 50px; font-weight: 700; font-size: 0.85rem; z-index: 2; }
+        .product-badge.popular { background: var(--success); }
+        .product-badge.new { background: var(--secondary); }
+        .product-header { background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); padding: 2.5rem 2rem; text-align: center; color: white; position: relative; overflow: hidden; }
+        .product-header::before { content: ''; position: absolute; top: -50%; right: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255,255,255,0.1) 1%, transparent 20%); opacity: 0.5; }
+        .product-icon { font-size: 3.5rem; margin-bottom: 1.5rem; color: white; position: relative; z-index: 1; }
+        .product-title { font-size: 1.6rem; font-weight: 700; margin-bottom: 0.5rem; position: relative; z-index: 1; }
+        .product-description { font-size: 0.95rem; opacity: 0.9; position: relative; z-index: 1; }
+        .product-body { padding: 2rem; }
+        .product-features { list-style: none; margin-bottom: 1.5rem; }
+        .product-features li { padding: 0.6rem 0; position: relative; padding-right: 1.8rem; }
+        .product-features li::before { content: '✓'; position: absolute; right: 0; color: var(--success); font-weight: bold; }
+        .product-price { display: flex; align-items: center; justify-content: space-between; margin: 1.5rem 0; padding: 1.2rem 0; border-top: 1px dashed #e2e8f0; border-bottom: 1px dashed #e2e8f0; }
+        .price-current { font-size: 2.3rem; font-weight: 800; color: var(--primary); }
+        .price-old { font-size: 1.3rem; color: var(--gray); text-decoration: line-through; margin-right: 0.5rem; }
+        .product-discount { background: #fee2e2; color: #dc2626; padding: 0.4rem 0.8rem; border-radius: 6px; font-weight: 700; font-size: 0.9rem; }
+        .product-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.5rem; }
+        .product-tag { background: var(--light); color: var(--dark); padding: 0.4rem 0.9rem; border-radius: 50px; font-size: 0.85rem; font-weight: 600; }
+
+        /* أزرار المنتج - تحسينات جديدة */
+        .product-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
+        @media (min-width: 768px) { .product-actions { flex-direction: row; flex-wrap: wrap; } }
+        .product-btn { display: block; width: 100%; background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%); color: white; text-align: center; padding: 1.2rem; border-radius: var(--radius); text-decoration: none; font-weight: 800; font-size: 1.1rem; transition: var(--transition); display: flex; align-items: center; justify-content: center; gap: 12px; cursor: pointer; border: none; }
+        .product-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(245,158,11,0.3); }
+        .product-btn.whatsapp { background: linear-gradient(135deg, #25D366, #128C7E); }
+        .product-btn.whatsapp:hover { box-shadow: 0 10px 20px rgba(37,211,102,0.3); }
+        .share-btn { background: #8b5cf6; color: white; border: none; padding: 1.2rem; border-radius: var(--radius); font-weight: 700; font-size: 1rem; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center; gap: 10px; flex: 1; }
+        .share-btn:hover { background: #7c3aed; transform: translateY(-2px); }
+        .video-btn { background: #0ea5e9; color: white; border: none; padding: 1.2rem; border-radius: var(--radius); font-weight: 700; font-size: 1rem; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center; gap: 10px; flex: 1; }
+        .video-btn:hover { background: #0284c7; transform: translateY(-2px); }
+        @media (min-width: 768px) { .product-btn.whatsapp, .share-btn, .video-btn { flex: 1; min-width: calc(33.333% - 7px); } }
+
+        /* نافذة المشاركة */
+        .share-modal { position: fixed; top: 0; right: 0; bottom: 0; left: 0; background: rgba(0,0,0,0.7); display: none; justify-content: center; align-items: center; z-index: 2000; padding: 20px; }
+        .share-modal.active { display: flex; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .share-content { background: white; border-radius: var(--radius); padding: 30px; max-width: 500px; width: 100%; box-shadow: var(--shadow-lg); }
+        .share-content h3 { display: flex; align-items: center; gap: 10px; margin-bottom: 25px; color: var(--primary); }
+        .share-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 25px; }
+        .share-option { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 15px; border-radius: var(--radius); text-decoration: none; font-weight: 700; transition: var(--transition); }
+        .share-option.whatsapp { background: #25D366; color: white; }
+        .share-option.facebook { background: #1877F2; color: white; }
+        .share-option.twitter { background: #1DA1F2; color: white; }
+        .share-option.email { background: #EA4335; color: white; }
+        .share-option.copy { background: var(--gray); color: white; }
+        .share-option:hover { transform: translateY(-3px); opacity: 0.9; }
+        .share-url { width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: var(--radius); margin-bottom: 20px; text-align: center; font-size: 0.9rem; }
+        .close-share { width: 100%; background: var(--primary); color: white; border: none; padding: 15px; border-radius: var(--radius); font-weight: 700; cursor: pointer; transition: var(--transition); }
+        .close-share:hover { background: var(--dark); }
+
+        /* نافذة الفيديو */
+        .video-modal { position: fixed; top: 0; right: 0; bottom: 0; left: 0; background: rgba(0,0,0,0.9); display: none; justify-content: center; align-items: center; z-index: 2000; padding: 20px; }
+        .video-modal.active { display: flex; animation: fadeIn 0.3s; }
+        .video-content { position: relative; max-width: 900px; width: 100%; }
+        .close-video { position: absolute; top: -40px; left: 0; background: none; border: none; color: white; font-size: 2rem; cursor: pointer; }
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; }
+        .video-container iframe { position: absolute; top: 0; right: 0; width: 100%; height: 100%; border-radius: var(--radius); }
+
+        /* أقسام أخرى */
+        .features-section { padding: 5rem 2rem; background: white; margin-top: 2rem; }
+        .features-container { max-width: 1200px; margin: 0 auto; }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; margin-top: 3rem; }
+        .feature-card { background: var(--light); padding: 2.5rem 2rem; border-radius: var(--radius); text-align: center; transition: var(--transition); border: 1px solid transparent; }
+        .feature-card:hover { border-color: var(--accent); transform: translateY(-10px); box-shadow: var(--shadow); }
+        .feature-icon { font-size: 3rem; color: var(--accent); margin-bottom: 1.5rem; }
+        .feature-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; color: var(--primary); }
+        .feature-text { color: var(--gray); line-height: 1.6; }
+
+        .testimonials-section { padding: 5rem 2rem; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); }
+        .testimonials-container { max-width: 1200px; margin: 0 auto; }
+        .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 3rem; }
+        .testimonial-card { background: white; padding: 2.5rem; border-radius: var(--radius); box-shadow: var(--shadow); position: relative; border-top: 4px solid var(--accent); }
+        .testimonial-text { font-size: 1.05rem; line-height: 1.8; color: var(--dark); margin-bottom: 1.5rem; font-style: italic; }
+        .testimonial-author { display: flex; align-items: center; gap: 1rem; }
+        .author-avatar { width: 60px; height: 60px; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 1.3rem; }
+        .author-info h4 { font-weight: 700; color: var(--primary); margin-bottom: 0.3rem; }
+        .author-info p { color: var(--gray); font-size: 0.9rem; }
+
+        .faq-section { padding: 5rem 2rem; max-width: 900px; margin: 0 auto; }
+        .faq-container { margin-top: 3rem; }
+        .faq-item { background: white; border-radius: var(--radius); margin-bottom: 1rem; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .faq-question { padding: 1.8rem 2rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 1.1rem; color: var(--primary); background: white; transition: var(--transition); }
+        .faq-question:hover { background: #fefce8; }
+        .faq-question i { color: var(--accent); transition: var(--transition); }
+        .faq-item.active .faq-question i { transform: rotate(180deg); }
+        .faq-answer { padding: 0 2rem; max-height: 0; overflow: hidden; transition: max-height 0.5s ease, padding 0.5s ease; color: var(--gray); line-height: 1.7; }
+        .faq-item.active .faq-answer { padding: 0 2rem 2rem; max-height: 500px; }
+
         /* الفوتر */
-        footer {
-            text-align: center;
-            padding: 3rem 2rem;
-            background: var(--dark);
-            color: white;
-            margin-top: 4rem;
+        .footer { background: var(--dark); color: white; padding: 5rem 2rem 2rem; }
+        .footer-container { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 3rem; }
+        .footer-logo { font-size: 1.8rem; font-weight: 800; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 12px; }
+        .footer-logo i { color: var(--accent); }
+        .footer-about { color: #cbd5e1; line-height: 1.7; margin-bottom: 1.5rem; }
+        .footer-title { font-size: 1.3rem; font-weight: 700; margin-bottom: 1.8rem; position: relative; padding-bottom: 0.8rem; }
+        .footer-title::after { content: ''; position: absolute; bottom: 0; right: 0; width: 50px; height: 3px; background: var(--accent); }
+        .footer-links { list-style: none; }
+        .footer-links li { margin-bottom: 1rem; }
+        .footer-links a { color: #cbd5e1; text-decoration: none; transition: var(--transition); display: flex; align-items: center; gap: 10px; }
+        .footer-links a:hover { color: var(--accent); padding-right: 5px; }
+        .footer-contact { color: #cbd5e1; }
+        .contact-item { display: flex; align-items: center; gap: 15px; margin-bottom: 1.5rem; }
+        .contact-item i { color: var(--accent); font-size: 1.2rem; width: 24px; }
+        .copyright { text-align: center; padding-top: 3rem; margin-top: 3rem; border-top: 1px solid rgba(255,255,255,0.1); color: #94a3b8; font-size: 0.95rem; }
+
+        /* زر العودة للأعلى */
+        .back-to-top { position: fixed; bottom: 30px; left: 30px; width: 50px; height: 50px; background: var(--accent); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; cursor: pointer; box-shadow: 0 5px 15px rgba(245,158,11,0.4); transition: var(--transition); z-index: 100; opacity: 0; visibility: hidden; }
+        .back-to-top.show { opacity: 1; visibility: visible; }
+        .back-to-top:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(245,158,11,0.5); }
+
+        /* التجاوب */
+        @media (max-width: 992px) {
+            .hero h1 { font-size: 2.5rem; }
+            .nav-links { gap: 1.5rem; }
+            .products-grid { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
         }
-        
-        .footer-content {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        
-        .contact-info {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 1.5rem;
-            margin-top: 1.5rem;
-        }
-        
-        .contact-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .copyright {
-            margin-top: 2rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.7);
-        }
-        
-        /* تحسينات للجوال */
         @media (max-width: 768px) {
-            h1 {
-                font-size: 2rem;
-            }
-            
-            h2 {
-                font-size: 1.7rem;
-            }
-            
-            .container {
-                padding: 1.5rem;
-            }
-            
-            .services {
-                grid-template-columns: 1fr;
-            }
-            
-            .skills {
-                grid-template-columns: 1fr;
-            }
-            
-            .whatsapp-section {
-                padding: 2rem 1.5rem;
-            }
-            
-            .lang-switcher {
-                top: 10px;
-                left: 10px;
-            }
-            
-            .lang-btn {
-                padding: 6px 12px;
-                font-size: 0.9rem;
-                min-width: 40px;
-            }
+            .navbar { flex-direction: column; padding: 1rem; gap: 1rem; }
+            .hero { padding: 7rem 1.5rem 4rem; margin-top: 120px; }
+            .hero h1 { font-size: 2rem; }
+            .hero p { font-size: 1.1rem; }
+            .stats { gap: 2rem; }
+            .filter-btns { gap: 8px; }
+            .filter-btn { padding: 0.6rem 1.2rem; font-size: 0.9rem; }
+            .products-section { padding: 0 1rem 3rem; }
+            .products-grid { grid-template-columns: 1fr; }
+            .features-section, .testimonials-section, .faq-section { padding: 3rem 1.5rem; }
+            .share-options { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 480px) {
+            .hero h1 { font-size: 1.8rem; }
+            .stat-number { font-size: 2rem; }
+            .product-card { margin-bottom: 1.5rem; }
+            .footer { padding: 3rem 1.5rem 1.5rem; }
         }
     </style>
 </head>
-<body dir="rtl">
+<body>
+    <!-- شريط التنقل -->
+    <nav class="navbar">
+        <a href="#" class="logo"><i class="fas fa-drafting-compass"></i><span>Z-Lisps Pro</span></a>
+        <div class="nav-links">
+            <a href="#products">المتجر</a>
+            <a href="#features">المميزات</a>
+            <a href="#testimonials">الشهادات</a>
+            <a href="#faq">الأسئلة</a>
+            <div class="language-switcher">
+                <button class="lang-btn active" data-lang="ar">عربي</button>
+                <button class="lang-btn" data-lang="fr">Français</button>
+            </div>
+            <a href="https://wa.me/212684726647" class="whatsapp-btn" target="_blank"><i class="fab fa-whatsapp"></i> طلب عبر واتساب</a>
+        </div>
+    </nav>
 
-<header>
-    <div class="lang-switcher">
-        <button class="lang-btn active" data-lang="ar">العربية</button>
-        <button class="lang-btn" data-lang="fr">Français</button>
-        <button class="lang-btn" data-lang="en">English</button>
-    </div>
-    
-    <div class="header-content">
-        <div class="lang-ar active">
-            <h1>زكريا - خدمات المقاييس الهندسية والعمل الحر</h1>
-            <p class="tagline">متخصص في Métré و Les-P، أقدم خدمات احترافية في حساب الكميات، إعداد المخططات الهندسية، ودراسات الجدوى للمشاريع بمختلف أحجامها.</p>
+    <!-- الهيدر -->
+    <header class="hero">
+        <div class="hero-content">
+            <h1>متجر أدوات <span style="color: var(--accent);">AutoCAD</span> الاحترافية</h1>
+            <p>أدوات <strong>Lisp</strong> برمجية ذكية توفر لك <strong>ساعات من العمل اليومي</strong>، وتزيد إنتاجيتك في AutoCAD. كل أداة مضمونة مع دعم فني مباشر.</p>
+            <a href="#products" class="product-btn" style="max-width: 300px; margin: 0 auto;"><i class="fas fa-shopping-cart"></i> تصفح المتجر الآن</a>
+            <div class="stats">
+                <div class="stat-item"><span class="stat-number">24+</span><span class="stat-label">أداة برمجية</span></div>
+                <div class="stat-item"><span class="stat-number">580+</span><span class="stat-label">عميل راضٍ</span></div>
+                <div class="stat-item"><span class="stat-number">100%</span><span class="stat-label">ضمان الجودة</span></div>
+            </div>
         </div>
-        <div class="lang-fr">
-            <h1>Zakaria - Services de Métré & Freelance</h1>
-            <p class="tagline">Spécialisé en Métré et Les-P, je propose des services professionnels en calcul des quantités, préparation des plans techniques et études de faisabilité pour projets de toutes tailles.</p>
-        </div>
-        <div class="lang-en">
-            <h1>Zakaria - Métré & Freelance Services</h1>
-            <p class="tagline">Specialized in Métré and Les-P, I provide professional services in quantity calculation, technical drawings preparation, and feasibility studies for projects of all sizes.</p>
-        </div>
-    </div>
-</header>
+    </header>
 
-<div class="container">
-    <div class="lang-ar active text-center">
-        <h2>خدماتي الاحترافية</h2>
-    </div>
-    <div class="lang-fr text-center">
-        <h2>Mes Services Professionnels</h2>
-    </div>
-    <div class="lang-en text-center">
-        <h2>My Professional Services</h2>
-    </div>
-    
-    <div class="services">
-        <div class="card">
-            <i class="fas fa-calculator"></i>
-            <div class="lang-ar active">
-                <h3>Métré & Devis</h3>
-                <p>حساب دقيق للكميات وإعداد كشوفات الحساب (Avant-métré / Attachements) مع إعداد التقديرات المالية للمشاريع الإنشائية والمعمارية بدقة عالية.</p>
-            </div>
-            <div class="lang-fr">
-                <h3>Métré & Devis</h3>
-                <p>Calcul précis des quantités et préparation des métrés (Avant-métré / Attachements) avec établissement des devis financiers pour projets de construction et d'architecture avec haute précision.</p>
-            </div>
-            <div class="lang-en">
-                <h3>Métré & Devis</h3>
-                <p>Accurate quantity calculation and preparation of measurement statements (Avant-métré / Attachements) with financial estimates for construction and architectural projects with high precision.</p>
+    <!-- المنتجات -->
+    <section id="products" class="products-section">
+        <div class="filter-section">
+            <h2 class="section-title">متجر الأدوات البرمجية</h2>
+            <p class="section-subtitle">اختر من بين مجموعة أدوات Lisp المتخصصة التي صممناها لتلبية احتياجات مهندسي AutoCAD</p>
+            <div class="filter-btns">
+                <button class="filter-btn active" data-filter="all"><i class="fas fa-layer-group"></i> الكل</button>
+                <button class="filter-btn" data-filter="drawing"><i class="fas fa-pencil-ruler"></i> أدوات الرسم</button>
+                <button class="filter-btn" data-filter="calculation"><i class="fas fa-calculator"></i> أدوات الحساب</button>
+                <button class="filter-btn" data-filter="organization"><i class="fas fa-tasks"></i> أدوات التنظيم</button>
+                <button class="filter-btn" data-filter="popular"><i class="fas fa-fire"></i> الأكثر مبيعاً</button>
             </div>
         </div>
-        <div class="card">
-            <i class="fas fa-drafting-compass"></i>
-            <div class="lang-ar active">
-                <h3>Les-P & Dessin</h3>
-                <p>إعداد المخططات الهندسية بدقة عالية باستخدام أحدث برامج التصميم (AutoCAD, Revit) وتقديم حلول تصميمية مبتكرة تلبي متطلبات المشروع.</p>
-            </div>
-            <div class="lang-fr">
-                <h3>Les-P & Dessin</h3>
-                <p>Préparation des plans techniques avec haute précision en utilisant les derniers logiciels de conception (AutoCAD, Revit) et fourniture de solutions de conception innovantes répondant aux exigences du projet.</p>
-            </div>
-            <div class="lang-en">
-                <h3>Les-P & Drawing</h3>
-                <p>Preparation of technical drawings with high accuracy using the latest design software (AutoCAD, Revit) and providing innovative design solutions that meet project requirements.</p>
+        <div class="products-grid" id="productsContainer"></div>
+    </section>
+
+    <!-- المميزات -->
+    <section id="features" class="features-section">
+        <div class="features-container">
+            <h2 class="section-title" style="text-align: center;">لماذا تختار أدواتنا؟</h2>
+            <p class="section-subtitle" style="text-align: center;">نقدم لك أفضل تجربة مع ضمان كامل للجودة والدعم الفني المباشر</p>
+            <div class="features-grid">
+                <div class="feature-card"><div class="feature-icon"><i class="fas fa-bolt"></i></div><h3 class="feature-title">توفير الوقت</h3><p class="feature-text">وفر ساعات من العمل الروتيني. أدواتنا تقوم بالمهام تلقائياً بدقة عالية.</p></div>
+                <div class="feature-card"><div class="feature-icon"><i class="fas fa-headset"></i></div><h3 class="feature-title">دعم فني مباشر</h3><p class="feature-text">دعم فني متاح على مدار الساعة عبر الواتساب لحل أي مشكلة فنية.</p></div>
+                <div class="feature-card"><div class="feature-icon"><i class="fas fa-sync-alt"></i></div><h3 class="feature-title">تحديثات مجانية</h3><p class="feature-text">جميع التحديثات المستقبلية للأدوات مجانية لمدة سنة كاملة.</p></div>
+                <div class="feature-card"><div class="feature-icon"><i class="fas fa-shield-alt"></i></div><h3 class="feature-title">ضمان 30 يوم</h3><p class="feature-text">ضمان استعادة الأموال خلال 30 يوماً إذا لم تكن الأداة كما وصفنا.</p></div>
             </div>
         </div>
-        <div class="card">
-            <i class="fas fa-file-invoice-dollar"></i>
-            <div class="lang-ar active">
-                <h3>Études de Prix</h3>
-                <p>تحليل الأسعار ودراسة الجدوى الاقتصادية للمشاريع الإنشائية بكافة أحجامها، مع تقديم تقارير مفصلة تساعد في اتخاذ القرارات الاستثمارية.</p>
+    </section>
+
+    <!-- الشهادات -->
+    <section id="testimonials" class="testimonials-section">
+        <div class="testimonials-container">
+            <h2 class="section-title" style="text-align: center;">ماذا يقول عملاؤنا؟</h2>
+            <p class="section-subtitle" style="text-align: center;">آراء حقيقية من مهندسين ومصممين يستخدمون أدواتنا يومياً</p>
+            <div class="testimonials-grid">
+                <div class="testimonial-card"><p class="testimonial-text">"أداة حساب المساحات غيرت طريقة عملي تماماً. كنت أقضي 3 ساعات يومياً في حساب المساحات يدوياً، والآن أنجز المهمة في 10 دقائق. استثمار ممتاز!"</p><div class="testimonial-author"><div class="author-avatar">م</div><div class="author-info"><h4>مهندس محمد</h4><p>مهندس مدني - مكتب هندسي نور</p></div></div></div>
+                <div class="testimonial-card"><p class="testimonial-text">"اشتريت 4 أدوات مختلفة، جميعها تعمل بسلاسة مع AutoCAD 2023. الدعم الفني سريع ومحترف. أنصح به بشدة لكل مهندس يعمل على أوتوكاد."</p><div class="testimonial-author"><div class="author-avatar">س</div><div class="author-info"><h4>مهندسة سارة</h4><p>مصممة معمارية - شركة البناء الحديث</p></div></div></div>
+                <div class="testimonial-card"><p class="testimonial-text">"أداة تنظيم الطبقات وفرت لي يوم عمل كامل في مشروعي الأخير. التواصل مع زكريا سريع والشرح واضح. سأشتري المزيد من الأدوات قريباً."</p><div class="testimonial-author"><div class="author-avatar">ع</div><div class="author-info"><h4>المهندس عمر</h4><p>مدير مشاريع - مقاولات العمراني</p></div></div></div>
             </div>
-            <div class="lang-fr">
-                <h3>Études de Prix</h3>
-                <p>Analyse des prix et étude de faisabilité économique pour projets de construction de toutes tailles, avec des rapports détaillés aidant à la prise de décisions d'investissement.</p>
+        </div>
+    </section>
+
+    <!-- الأسئلة -->
+    <section id="faq" class="faq-section">
+        <h2 class="section-title" style="text-align: center;">أسئلة شائعة</h2>
+        <p class="section-subtitle" style="text-align: center;">إجابات على أكثر الأسئلة التي تردنا من العملاء</p>
+        <div class="faq-container">
+            <div class="faq-item"><div class="faq-question">كيف أحصل على الأداة بعد الشراء؟<i class="fas fa-chevron-down"></i></div><div class="faq-answer">بعد إتمام الدفع، سنرسل لك ملف الـ Lisp عبر البريد الإلكتروني أو الواتساب مع شرح تفصيلي لطريقة التثبيت والاستخدام. ستتلقى أيضاً فيديو توضيحي إذا طلبت ذلك.</div></div>
+            <div class="faq-item"><div class="faq-question">ما هي إصدارات AutoCAD المدعومة؟<i class="fas fa-chevron-down"></i></div><div class="faq-answer">جميع الأدوات تعمل على AutoCAD 2010 فما فوق، بما في ذلك أحدث إصدار 2024. معظم الأدوات تدعم الإصدارات العربية والفرنسية والإنجليزية.</div></div>
+            <div class="faq-item"><div class="faq-question">هل يمكنني طلب تعديل على أداة معينة؟<i class="fas fa-chevron-down"></i></div><div class="faq-answer">نعم، نقدم خدمة التعديل حسب احتياجاتك الخاصة. يمكنك مناقشة التعديلات المطلوبة وسنقدم لك سعراً إضافياً مناسباً للتعديل.</div></div>
+            <div class="faq-item"><div class="faq-question">هل هناك ضمان على الأدوات؟<i class="fas fa-chevron-down"></i></div><div class="faq-answer">نعم، جميع الأدوات مضمونة وتأتي مع دعم فني مجاني لمدة 30 يوماً. خلال هذه الفترة يمكنك الاستفسار عن أي مشكلة فنية وسنحلها لك.</div></div>
+            <div class="faq-item"><div class="faq-question">ما هي طرق الدفع المتاحة؟<i class="fas fa-chevron-down"></i></div><div class="faq-answer">نقدم عدة طرق للدفع: حوالة بنكية، باريد (Pairad)، ويسترنيون (Western Union)، فودافون كاش، أو الدفع المباشر عبر شخص. نعمل على إضافة الدفع الإلكتروني قريباً.</div></div>
+        </div>
+    </section>
+
+    <!-- الفوتر -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-col">
+                <div class="footer-logo"><i class="fas fa-drafting-compass"></i><span>Z-Lisps Pro</span></div>
+                <p class="footer-about">متجر متخصص في أدوات AutoCAD البرمجية (Lisps) التي توفر الوقت والجهد للمهندسين والمصممين. نقدم منتجات عالية الجودة مع دعم فني مباشر.</p>
+                <a href="https://wa.me/212684726647" class="product-btn whatsapp" target="_blank" style="margin-top: 1.5rem;"><i class="fab fa-whatsapp"></i> تواصل معنا على واتساب</a>
             </div>
-            <div class="lang-en">
-                <h3>Price Studies</h3>
-                <p>Price analysis and economic feasibility study for construction projects of all sizes, with detailed reports assisting in investment decision-making.</p>
+            <div class="footer-col"><h3 class="footer-title">روابط سريعة</h3><ul class="footer-links"><li><a href="#products"><i class="fas fa-arrow-left"></i> المتجر</a></li><li><a href="#features"><i class="fas fa-arrow-left"></i> مميزاتنا</a></li><li><a href="#testimonials"><i class="fas fa-arrow-left"></i> شهادات العملاء</a></li><li><a href="#faq"><i class="fas fa-arrow-left"></i> الأسئلة الشائعة</a></li></ul></div>
+            <div class="footer-col"><h3 class="footer-title">معلومات الاتصال</h3><div class="footer-contact"><div class="contact-item"><i class="fas fa-phone-alt"></i><span>+212 684-726647</span></div><div class="contact-item"><i class="fab fa-whatsapp"></i><span>واتساب: نفس الرقم</span></div><div class="contact-item"><i class="fas fa-envelope"></i><span>zakaria.akb@example.com</span></div><div class="contact-item"><i class="fas fa-map-marker-alt"></i><span>المغرب</span></div></div></div>
+        </div>
+        <div class="copyright"><p>جميع الحقوق محفوظة © 2024 - Z-Lisps Pro | متجر أدوات AutoCAD البرمجية</p></div>
+    </footer>
+
+    <!-- نافذة المشاركة -->
+    <div class="share-modal" id="shareModal">
+        <div class="share-content">
+            <h3><i class="fas fa-share"></i> شارك هذه الأداة</h3>
+            <div class="share-options">
+                <a class="share-option whatsapp" data-platform="whatsapp"><i class="fab fa-whatsapp"></i> واتساب</a>
+                <a class="share-option facebook" data-platform="facebook"><i class="fab fa-facebook"></i> فيسبوك</a>
+                <a class="share-option twitter" data-platform="twitter"><i class="fab fa-twitter"></i> تويتر</a>
+                <a class="share-option email" data-platform="email"><i class="fas fa-envelope"></i> إيميل</a>
+                <a class="share-option copy" data-platform="copy"><i class="fas fa-copy"></i> نسخ الرابط</a>
             </div>
+            <input type="text" class="share-url" readonly value="https://zakariaakb.github.io">
+            <button class="close-share">إغلاق</button>
         </div>
     </div>
 
-    <div class="skills">
-        <div class="skill-category">
-            <div class="lang-ar active">
-                <h3>المهارات التقنية</h3>
-                <ul class="skill-list">
-                    <li><i class="fas fa-check-circle"></i> إعداد وتنظيم المقاييس الكمية</li>
-                    <li><i class="fas fa-check-circle"></i> تحليل الأسعار والتكاليف</li>
-                    <li><i class="fas fa-check-circle"></i> إعداد المخططات التنفيذية</li>
-                    <li><i class="fas fa-check-circle"></i> إعداد دراسات الجدوى الاقتصادية</li>
-                    <li><i class="fas fa-check-circle"></i> استخدام برامج التصميم الهندسي</li>
-                </ul>
-            </div>
-            <div class="lang-fr">
-                <h3>Compétences Techniques</h3>
-                <ul class="skill-list">
-                    <li><i class="fas fa-check-circle"></i> Préparation et organisation des métrés quantitatifs</li>
-                    <li><i class="fas fa-check-circle"></i> Analyse des prix et des coûts</li>
-                    <li><i class="fas fa-check-circle"></i> Préparation des plans d'exécution</li>
-                    <li><i class="fas fa-check-circle"></i> Élaboration d'études de faisabilité économique</li>
-                    <li><i class="fas fa-check-circle"></i> Maîtrise des logiciels de conception technique</li>
-                </ul>
-            </div>
-            <div class="lang-en">
-                <h3>Technical Skills</h3>
-                <ul class="skill-list">
-                    <li><i class="fas fa-check-circle"></i> Preparation and organization of quantitative measurements</li>
-                    <li><i class="fas fa-check-circle"></i> Price and cost analysis</li>
-                    <li><i class="fas fa-check-circle"></i> Preparation of execution plans</li>
-                    <li><i class="fas fa-check-circle"></i> Development of economic feasibility studies</li>
-                    <li><i class="fas fa-check-circle"></i> Mastery of technical design software</li>
-                </ul>
-            </div>
-        </div>
-        
-        <div class="skill-category">
-            <div class="lang-ar active">
-                <h3>مجالات التخصص</h3>
-                <ul class="skill-list">
-                    <li><i class="fas fa-building"></i> المشاريع السكنية والتجارية</li>
-                    <li><i class="fas fa-road"></i> المشاريع البنية التحتية</li>
-                    <li><i class="fas fa-industry"></i> المشاريع الصناعية</li>
-                    <li><i class="fas fa-hard-hat"></i> مشاريع الترميم والتجديد</li>
-                    <li><i class="fas fa-home"></i> المشاريع الصغرى والمتوسطة</li>
-                </ul>
-            </div>
-            <div class="lang-fr">
-                <h3>Domaines de Spécialisation</h3>
-                <ul class="skill-list">
-                    <li><i class="fas fa-building"></i> Projets résidentiels et commerciaux</li>
-                    <li><i class="fas fa-road"></i> Projets d'infrastructure</li>
-                    <li><i class="fas fa-industry"></i> Projets industriels</li>
-                    <li><i class="fas fa-hard-hat"></i> Projets de rénovation et réhabilitation</li>
-                    <li><i class="fas fa-home"></i> Petits et moyens projets</li>
-                </ul>
-            </div>
-            <div class="lang-en">
-                <h3>Specialization Areas</h3>
-                <ul class="skill-list">
-                    <li><i class="fas fa-building"></i> Residential and commercial projects</li>
-                    <li><i class="fas fa-road"></i> Infrastructure projects</li>
-                    <li><i class="fas fa-industry"></i> Industrial projects</li>
-                    <li><i class="fas fa-hard-hat"></i> Renovation and rehabilitation projects</li>
-                    <li><i class="fas fa-home"></i> Small and medium projects</li>
-                </ul>
+    <!-- نافذة الفيديو -->
+    <div class="video-modal" id="videoModal">
+        <div class="video-content">
+            <button class="close-video">&times;</button>
+            <div class="video-container">
+                <iframe id="demoVideo" width="560" height="315" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             </div>
         </div>
     </div>
 
-    <div class="whatsapp-section">
-        <div class="lang-ar active">
-            <h2>هل تحتاج إلى خدمة سريعة ودقيقة؟</h2>
-            <p>أنا هنا لمساعدتك في تقديم حلول هندسية احترافية تناسب مشروعك وميزانيتك. تواصل معي مباشرة عبر الواتساب لمناقشة تفاصيل مشروعك والحصول على عرض سعر مجاني.</p>
-            <a href="https://wa.me/212684726647" class="btn-whatsapp">
-                <i class="fab fa-whatsapp"></i> تواصل معي عبر الواتساب
-            </a>
-        </div>
-        <div class="lang-fr">
-            <h2>Besoin d'un service rapide et précis ?</h2>
-            <p>Je suis là pour vous aider à fournir des solutions techniques professionnelles adaptées à votre projet et budget. Contactez-moi directement via WhatsApp pour discuter des détails de votre projet et obtenir un devis gratuit.</p>
-            <a href="https://wa.me/212684726647" class="btn-whatsapp">
-                <i class="fab fa-whatsapp"></i> Contactez-moi sur WhatsApp
-            </a>
-        </div>
-        <div class="lang-en">
-            <h2>Need a Fast and Accurate Service?</h2>
-            <p>I'm here to help you provide professional technical solutions that fit your project and budget. Contact me directly via WhatsApp to discuss your project details and get a free quote.</p>
-            <a href="https://wa.me/212684726647" class="btn-whatsapp">
-                <i class="fab fa-whatsapp"></i> Contact me on WhatsApp
-            </a>
-        </div>
-        <p style="margin-top: 1rem; font-size: 0.9rem;">+212 684-726647</p>
-    </div>
-</div>
+    <!-- زر العودة -->
+    <div class="back-to-top" id="backToTop"><i class="fas fa-arrow-up"></i></div>
 
-<footer>
-    <div class="footer-content">
-        <div class="lang-ar active">
-            <h3>زكريا - خدمات هندسية احترافية</h3>
-            <p>متخصص في Métré و Les-P ودراسات الأسعار للمشاريع الإنشائية</p>
-        </div>
-        <div class="lang-fr">
-            <h3>Zakaria - Services Techniques Professionnels</h3>
-            <p>Spécialisé en Métré, Les-P et études de prix pour projets de construction</p>
-        </div>
-        <div class="lang-en">
-            <h3>Zakaria - Professional Technical Services</h3>
-            <p>Specialized in Métré, Les-P and price studies for construction projects</p>
-        </div>
-        
-        <div class="contact-info">
-            <div class="contact-item">
-                <i class="fas fa-phone"></i>
-                <span>+212 684-726647</span>
-            </div>
-            <div class="contact-item">
-                <i class="fas fa-envelope"></i>
-                <span>zakaria.metre@example.com</span>
-            </div>
-            <div class="contact-item">
-                <i class="fas fa-map-marker-alt"></i>
-                <div class="lang-ar active">المغرب</div>
-                <div class="lang-fr">Maroc</div>
-                <div class="lang-en">Morocco</div>
-            </div>
-        </div>
-        
-        <div class="copyright">
-            <div class="lang-ar active">
-                <p>جميع الحقوق محفوظة &copy; 2024 - زكريا | خدمات المقاييس الهندسية والعمل الحر</p>
-            </div>
-            <div class="lang-fr">
-                <p>Tous droits réservés &copy; 2024 - Zakaria | Services de Métré & Freelance</p>
-            </div>
-            <div class="lang-en">
-                <p>All rights reserved &copy; 2024 - Zakaria | Métré & Freelance Services</p>
-            </div>
-        </div>
-    </div>
-</footer>
+    <script>
+        // البيانات
+        const products = [
+            { id:1, name:"Lisp حساب المساحات الإجمالي", description:"يقوم بحساب مساحة عدة أشكال مغلقة تلقائياً مع إنشاء جدول تفصيلي في ملف Excel وتصدير النتائج", price:180, oldPrice:220, category:["calculation","popular"], features:["حساب مساحات متعددة بضغطة واحدة","تصدير النتائج إلى Excel تلقائياً","دعم جميع الأشكال المغلفة","تخصيص وحدات القياس","إضافة تسميات تلقائية للمساحات","حساب المحيطات أيضاً"], icon:"fa-calculator", tags:["AutoCAD","Excel","حساب كميات","مساحات"], badge:"popular", video:"dQw4w9WgXcQ" },
+            { id:2, name:"Lisp تنظيم الطبقات الذكي", description:"تنظيم أوتوماتيكي لجميع الطبقات في الرسم مع تصحيح الألوان والخطوط وحذف الطبقات غير المستخدمة", price:120, oldPrice:150, category:["organization","popular"], features:["تنظيم تلقائي لـ 50+ طبقة","تصحيح ألوان الطبقات المعيارية","حذف الطبقات غير المستخدمة","إنشاء مجموعات طبقات جديدة","نسخ إعدادات الطبقات بين الملفات","تصدير وإعدادات الطبقات"], icon:"fa-layer-group", tags:["Organization","Layers","Efficiency","AutoCAD"], badge:"popular", video:"dQw4w9WgXcQ" },
+            { id:3, name:"Lisp ترقيم النقاط تلقائياً", description:"ترقيم النقاط والأبعاد في المخططات الهندسية بشكل تلقائي ومنظم مع تحديث الترقيم عند التعديل", price:140, category:["drawing","popular"], features:["ترقيم تلقائي للنقاط والأبعاد","تحديث الترقيم عند التعديل","خيارات متعددة لأنماط الترقيم","تصدير قائمة النقاط إلى Excel","ربط الترقيم بالأبعاد تلقائياً","تخصيص حجم ولون الترقيم"], icon:"fa-sort-numeric-up", tags:["Numbering","Points","AutoCAD","Dimensions"], badge:"new", video:"dQw4w9WgXcQ" },
+            { id:4, name:"Lisp استخراج الكميات من المخططات", description:"استخراج تلقائي للكميات والمواصفات من المخططات الإنشائية مع توليد تقرير مفصل", price:250, oldPrice:300, category:["calculation","popular"], features:["استخراج كميات الحديد والخرسانة","حساب كميات المواد المختلفة","توليد تقرير مفصل بالكميات","تصدير إلى Excel وPDF","دعم المقاطع والتفاصيل الإنشائية","ربط الكميات بالمواصفات"], icon:"fa-ruler-combined", tags:["Quantity","Extraction","Structural","Materials"], badge:"popular", video:"dQw4w9WgXcQ" },
+            { id:5, name:"Lisp الرسم السريع للجدران والأبواب", description:"أداة متقدمة للرسم السريع للعناصر المعمارية الأساسية مع ضبط سماكات الجدران تلقائياً", price:160, oldPrice:200, category:["drawing"], features:["رسم جدران بقياسات مسبقة","إضافة أبواب ونوافذ تلقائياً","ضبط سماكات الجدران المختلفة","توليد مقاطع عرضية","حساب المحيط والمساحة تلقائياً","مكتبة عناصر معمارية جاهزة"], icon:"fa-home", tags:["Architecture","Walls","Doors","Drawing"], badge:null, video:"dQw4w9WgXcQ" },
+            { id:6, name:"Lisp التحليل الإنشائي المبسط", description:"أدوات حسابية مبسطة للتحليل الإنشائي الأولي مع دعم الكودات المحلية والدولية", price:280, oldPrice:350, category:["calculation"], features:["حساب الأحمال الإنشائية المختلفة","توزيع الأحمال على العناصر","توليد تقارير الحسابات","دعم الكودات المحلية والعالمية","تصدير نتائج الحسابات","مكتبة أحمال جاهزة"], icon:"fa-weight-hanging", tags:["Structural","Analysis","Calculation","Loads"], badge:"popular", video:"dQw4w9WgXcQ" },
+            { id:7, name:"Lisp إدارة الملفات والمراجع", description:"أداة متكاملة لإدارة الملفات المرتبطة والمراجع الخارجية مع فحص واصلاح المراجع المفقودة", price:110, category:["organization"], features:["فحص واصلاح المراجع المفقودة","إعادة توجيع المسارات تلقائياً","نسخ المراجع إلى مجلد المشروع","توليد تقرير بالمراجع المستخدمة","تنظيم إعدادات الطباعة","إدارة نسخ الملفات الاحتياطية"], icon:"fa-folder-tree", tags:["Xref","Management","Files","Organization"], badge:null, video:"dQw4w9WgXcQ" },
+            { id:8, name:"Lisp توليد المخططات التنفيذية", description:"تحويل المخططات التخطيطية إلى مخططات تنفيذية مع تفاصيل كاملة وإضافة الرموز القياسية", price:220, oldPrice:280, category:["drawing"], features:["توليد تلقائي للتفاصيل التنفيذية","إضافة الرموز القياسية تلقائياً","تخصيص الأنماط والأبعاد","حفظ القوالب وإعادة استخدامها","ضبط مقاييس الرسم تلقائياً","مكتبة تفاصيل إنشائية جاهزة"], icon:"fa-drafting-compass", tags:["Execution","Plans","Generation","Details"], badge:"new", video:"dQw4w9WgXcQ" }
+        ];
 
-<script>
-    // تبديل اللغة
-    const langButtons = document.querySelectorAll('.lang-btn');
-    const arabicElements = document.querySelectorAll('.lang-ar');
-    const frenchElements = document.querySelectorAll('.lang-fr');
-    const englishElements = document.querySelectorAll('.lang-en');
-    
-    // وظيفة تبديل اللغة
-    function switchLanguage(lang) {
-        // إزالة الفعالية من جميع الأزرار
-        langButtons.forEach(btn => {
-            btn.classList.remove('active');
-        });
-        
-        // إخفاء جميع المحتويات
-        arabicElements.forEach(el => el.classList.remove('active'));
-        frenchElements.forEach(el => el.classList.remove('active'));
-        englishElements.forEach(el => el.classList.remove('active'));
-        
-        // إظهار المحتوى المحدد وتفعيل الزر
-        if (lang === 'ar') {
-            arabicElements.forEach(el => el.classList.add('active'));
-            document.querySelector('[data-lang="ar"]').classList.add('active');
-            document.documentElement.dir = 'rtl';
-            document.documentElement.lang = 'ar';
-        } else if (lang === 'fr') {
-            frenchElements.forEach(el => el.classList.add('active'));
-            document.querySelector('[data-lang="fr"]').classList.add('active');
-            document.documentElement.dir = 'ltr';
-            document.documentElement.lang = 'fr';
-        } else if (lang === 'en') {
-            englishElements.forEach(el => el.classList.add('active'));
-            document.querySelector('[data-lang="en"]').classList.add('active');
-            document.documentElement.dir = 'ltr';
-            document.documentElement.lang = 'en';
+        // عرض المنتجات
+        function displayProducts(filter = "all") {
+            const container = document.getElementById("productsContainer");
+            let filteredProducts = filter !== "all" ? products.filter(p => p.category.includes(filter)) : products;
+            
+            container.innerHTML = filteredProducts.map(product => {
+                const discount = product.oldPrice ? Math.round((1 - product.price / product.oldPrice) * 100) : 0;
+                const pageUrl = `https://zakariaakb.github.io?product=${product.id}`;
+                const shareText = `شوف هاد الأداة ديال AutoCAD: ${product.name} - ${product.price}DH`;
+                
+                return `
+                <div class="product-card" data-categories="${product.category.join(' ')}">
+                    ${product.badge ? `<div class="product-badge ${product.badge}">${product.badge === 'popular' ? 'الأكثر مبيعاً' : 'جديد'}</div>` : ''}
+                    <div class="product-header"><div class="product-icon"><i class="fas ${product.icon}"></i></div><h3 class="product-title">${product.name}</h3><p class="product-description">${product.description}</p></div>
+                    <div class="product-body">
+                        <ul class="product-features">${product.features.map(f => `<li>${f}</li>`).join('')}</ul>
+                        <div class="product-tags">${product.tags.map(t => `<span class="product-tag">${t}</span>`).join('')}</div>
+                        <div class="product-price"><div><span class="price-current">${product.price} DH</span>${product.oldPrice ? `<span class="price-old">${product.oldPrice} DH</span>` : ''}</div>${discount > 0 ? `<div class="product-discount">خصم ${discount}%</div>` : ''}</div>
+                        <div class="product-actions">
+                            <a href="https://wa.me/212684726647?text=${encodeURIComponent(`مرحباً، أريد شراء ${product.name} - ${product.price}DH`)}" class="product-btn whatsapp" target="_blank"><i class="fab fa-whatsapp"></i> شراء عبر واتساب</a>
+                            <button class="share-btn" data-product-id="${product.id}" data-product-name="${product.name}" data-product-price="${product.price}"><i class="fas fa-share-alt"></i> مشاركة</button>
+                            <button class="video-btn" data-video="${product.video}"><i class="fas fa-play-circle"></i> فيديو تجريبي</button>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
         }
-        
-        // حفظ اللغة في localStorage
-        localStorage.setItem('preferredLanguage', lang);
-    }
-    
-    // إضافة مستمعي الأحداث للأزرار
-    langButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const lang = this.getAttribute('data-lang');
-            switchLanguage(lang);
-        });
-    });
-    
-    // تحميل اللغة المفضلة من localStorage
-    document.addEventListener('DOMContentLoaded', function() {
-        const savedLang = localStorage.getItem('preferredLanguage') || 'ar';
-        switchLanguage(savedLang);
-    });
-</script>
 
+        // التهيئة
+        document.addEventListener("DOMContentLoaded", function() {
+            displayProducts();
+            
+            // الفلاتر
+            document.querySelectorAll(".filter-btn").forEach(btn => {
+                btn.addEventListener("click", function() {
+                    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+                    this.classList.add("active");
+                    displayProducts(this.getAttribute("data-filter"));
+                });
+            });
+            
+            // الأسئلة
+            document.querySelectorAll(".faq-question").forEach(q => {
+                q.addEventListener("click", function() {
+                    this.parentElement.classList.toggle("active");
+                });
+            });
+            
+            // العودة للأعلى
+            const backBtn = document.getElementById("backToTop");
+            window.addEventListener("scroll", () => {
+                backBtn.classList.toggle("show", window.pageYOffset > 300);
+            });
+            backBtn.addEventListener("click", () => {
+                window.scrollTo({top:0, behavior:"smooth"});
+            });
+            
+            // التمرير السلس
+            document.querySelectorAll('a[href^="#"]').forEach(a => {
+                a.addEventListener("click", function(e) {
+                    const href = this.getAttribute("href");
+                    if (href !== "#") {
+                        e.preventDefault();
+                        const target = document.querySelector(href);
+                        if (target) window.scrollTo({top: target.offsetTop - 80, behavior:"smooth"});
+                    }
+                });
+            });
+            
+            // تغيير اللغة
+            document.querySelectorAll(".lang-btn").forEach(btn => {
+                btn.addEventListener("click", function() {
+                    document.querySelectorAll(".lang-btn").forEach(b => b.classList.remove("active"));
+                    this.classList.add("active");
+                    alert("ميزة تغيير اللغة قيد التطوير. سيتم تفعيلها قريباً!");
+                });
+            });
+            
+            // المشاركة
+            let currentProduct = null;
+            document.addEventListener("click", function(e) {
+                if (e.target.closest(".share-btn")) {
+                    const btn = e.target.closest(".share-btn");
+                    currentProduct = {
+                        id: btn.dataset.productId,
+                        name: btn.dataset.productName,
+                        price: btn.dataset.productPrice
+                    };
+                    document.getElementById("shareModal").classList.add("active");
+                }
+                
+                if (e.target.closest(".close-share") || e.target.classList.contains("share-modal")) {
+                    document.getElementById("shareModal").classList.remove("active");
+                }
+                
+                if (e.target.closest(".share-option")) {
+                    const option = e.target.closest(".share-option");
+                    const platform = option.dataset.platform;
+                    const url = `https://zakariaakb.github.io?product=${currentProduct.id}`;
+                    const text = `شوف هاد الأداة ديال AutoCAD: ${currentProduct.name} - ${currentProduct.price}DH`;
+                    
+                    switch(platform) {
+                        case "whatsapp": window.open(`https://wa.me/?text=${encodeURIComponent(text + " " + url)}`, "_blank"); break;
+                        case "facebook": window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, "_blank"); break;
+                        case "twitter": window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, "_blank"); break;
+                        case "email": window.open(`mailto:?subject=${encodeURIComponent(currentProduct.name)}&body=${encodeURIComponent(text + "\n\n" + url)}`); break;
+                        case "copy": navigator.clipboard.writeText(url).then(() => alert("تم نسخ الرابط!")); break;
+                    }
+                }
+            });
+            
+            // الفيديو
+            document.addEventListener("click", function(e) {
+                if (e.target.closest(".video-btn")) {
+                    const videoId = e.target.closest(".video-btn").dataset.video;
+                    document.getElementById("demoVideo").src = `https://www.youtube.com/embed/${videoId}`;
+                    document.getElementById("videoModal").classList.add("active");
+                }
+                
+                if (e.target.closest(".close-video") || e.target.classList.contains("video-modal")) {
+                    document.getElementById("demoVideo").src = "";
+                    document.getElementById("videoModal").classList.remove("active");
+                }
+            });
+            
+            // التأثيرات
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = "1";
+                        entry.target.style.transform = "translateY(0)";
+                    }
+                });
+            }, {threshold:0.1, rootMargin:"0px 0px -50px 0px"});
+            
+            document.querySelectorAll(".product-card, .feature-card, .testimonial-card").forEach(el => {
+                el.style.opacity = "0";
+                el.style.transform = "translateY(20px)";
+                el.style.transition = "opacity 0.5s ease, transform 0.5s ease";
+                observer.observe(el);
+            });
+        });
+    </script>
 </body>
 </html>
